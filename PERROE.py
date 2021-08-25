@@ -9,6 +9,7 @@ import os
 import json
 import pandas as pd
 import numpy as np
+from datetime import datetime
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
 sp500 = fdr.StockListing('S&P500')
@@ -16,6 +17,7 @@ sp500 = fdr.StockListing('S&P500')
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+import re
 
 # 종목별 valuation 지표 생성
 def stock_factors(sym):
@@ -127,7 +129,7 @@ PBRROE_rank = PBR_rank + ROE_rank
 
 selected = sp500.loc[np.where(PBRROE_rank<=400)]
 start_date = '20210401'
-end_date = '20210815'
+end_date = datetime.today()
 
 def get_return(selected, start_date, end_date) :
     for ind, val in enumerate(selected['Symbol'].values):
@@ -149,7 +151,7 @@ result = get_return(selected, start_date, end_date)
 # Cumulative Compounded Returns for valueStrategu
 plt.figure(figsize=(17,7))
 plt.title('PBR ROE Startegy')
-plt.plot(result,label = [ i for i in ['BIO', 'CE', 'COO', 'DFS', 'HOLX', 'LMT', 'LYB', 'NRG', 'WU', 'WHR']])
+plt.plot(result)
 # plt.plot(return_df,label = [ i for i in return_df.columns])
 plt.legend()
 plt.show()
