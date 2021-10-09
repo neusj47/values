@@ -14,6 +14,9 @@ pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
 sp500 = fdr.StockListing('S&P500')
 
+sp500 =sp500.drop(sp500.index[132])
+
+
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -39,10 +42,15 @@ def stock_factors(sym):
     dividend = _conv_to_float(v['Dividend %'])
     per = _conv_to_float(v['P/E'])
     pbr = _conv_to_float(v['P/B'])
+    pcr = _conv_to_float(v['P/C'])
+    psr = _conv_to_float(v['P/S'])
+    pfcf = _conv_to_float(v['P/FCF'])
+    peg = _conv_to_float(v['PEG'])
     beta = _conv_to_float(v['Beta'])
     roe = _conv_to_float(v['ROE'])
+    eps = _conv_to_float(v['EPS next Y'])
 
-    return {'MarCap':marcap, 'Dividend':dividend, 'PER':per, 'PBR':pbr, 'Beta':beta, 'ROE':roe}
+    return {'MarCap':marcap, 'Dividend':dividend, 'PER':per, 'PBR':pbr, 'PCR':pcr, 'PSR':psr, 'PFCF': pfcf, 'PEG':peg, 'Beta':beta, 'ROE':roe, 'EPS':eps}
 
 # 데이터 전처리 변환
 def _conv_to_float(s):
@@ -88,7 +96,7 @@ for ix, row in sp500.iterrows():
     with open(json_fn, 'r') as f:
         factors = json.load(f)
 
-        for f in ['MarCap', 'Dividend', 'PER', 'PBR', 'Beta', 'ROE']:
+        for f in ['MarCap', 'Dividend', 'PER', 'PBR', 'PCR', 'PSR', 'PFCF', 'PEG', 'Beta', 'ROE', 'EPS']:
             sp500.loc[ix, f] = factors[f]
 
 
